@@ -6,8 +6,8 @@ import cors from 'cors';
 import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
 import router from './routes/appRoutes.mjs';
+import authRouter from './routes/authRoutes.mjs'
 
-import './config/passport-config.mjs'; // Import passport configuration
 import dotenv from 'dotenv';
 dotenv.config();
 
@@ -34,6 +34,7 @@ app.use(passport.session());
 app.use(bodyParser.json());
 app.use(cors(corsOptions)); // Use this after the variable declaration
 
+app.use('/api/v1/auth/', authRouter); // <- NEW LINE
 app.use("/", router)
 
 // Static folder
