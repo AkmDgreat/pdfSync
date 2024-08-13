@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import GoogleLogin from "./components/GoogleLogin";
+
+import dotenv from 'dotenv';
+dotenv.config();
 const CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID
 
 function App() {
