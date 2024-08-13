@@ -2,9 +2,7 @@ import React, { useState } from "react";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import GoogleLogin from "./components/GoogleLogin";
 
-import dotenv from 'dotenv';
-dotenv.config();
-const CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID
+const CLIENT_ID = "650511107339-a4avh4qp1i87h4a3ed4su7m43ddk10m1.apps.googleusercontent.com"
 
 function App() {
 	const [user, setUser] = useState();
