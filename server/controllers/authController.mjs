@@ -12,43 +12,12 @@ dotenv.config();
 
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID
 const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
-const REDIRECT_URL = 'http://localhost:3000'
+const PORT = process.env.PORT
+const REDIRECT_URL = `http://localhost:${PORT}`
 
 const signToken = (id) => {
     return jwt.sign({ id }, process.env.JWT_SECRET, {
         expiresIn: process.env.JWT_TIMEOUT,
-    });
-};
-
-// Create and send Cookie ->
-const createSendToken = (user, statusCode, res) => {
-    const token = signToken(user.id);
-
-    console.log(process.env.JWT_COOKIE_EXPIRES_IN);
-    const cookieOptions = {
-        expires: new Date(Date.now() + +process.env.JWT_COOKIE_EXPIRES_IN),
-        httpOnly: true,
-        path: '/',
-        // sameSite: "none",
-        secure: false,
-    };
-    if (process.env.NODE_ENV === 'production') {
-        cookieOptions.secure = true;
-        cookieOptions.sameSite = 'none';
-    }
-
-    user.password = undefined;
-
-    res.cookie('jwt', token, cookieOptions);
-
-    console.log(user);
-
-    res.status(statusCode).json({
-        message: 'success',
-        token,
-        data: {
-            user,
-        },
     });
 };
 
@@ -75,8 +44,6 @@ const googleAuth = catchAsync(async (req, res, next) => {
             image: userRes.data.picture,
         });
     }
-
-    createSendToken(user, 201, res);
 });
 
 export default {googleAuth}

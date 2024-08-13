@@ -1,5 +1,5 @@
 import React from "react";
-import { useGoogleLogin } from "@react-oauth/google";
+import { useGoogleLogin, googleLogout } from "@react-oauth/google";
 import { googleAuth } from "../services/api.mjs";
                               
 export default (props) => {
@@ -25,14 +25,23 @@ export default (props) => {
 		flow: "auth-code",
 	});
 
+	// log out function to log the user out of google and set the profile array to null
+    const logOut = () => {
+        googleLogout();
+        props.setUser(null);
+    };
+
 	return (
-		<button
-			style={{
-				padding: "10px 20px",
-			}}
-			onClick={googleLogin}
-		>
-			Sign in with Google
-		</button>
+		<div>
+			<button
+				style={{
+					padding: "10px 20px",
+				}}
+				onClick={googleLogin}
+			>
+				Sign in with Google
+			</button>
+			<button onClick={logOut}>Log out</button>
+		</div>
 	);
 };

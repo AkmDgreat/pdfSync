@@ -12,10 +12,10 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const MONGO_URI = process.env.MONGO_URI
-const PORT = process.env.PORT || 3000
+const PORT = process.env.PORT || 8000
 
 const corsOptions = {
-   origin: '*',
+   origin: ['http://localhost:3000', 'http://localhost:80'],
    credentials: true,       
    optionsSuccessStatus: 200,
 };
@@ -35,7 +35,7 @@ app.use(bodyParser.json());
 app.use(cors(corsOptions)); // Use this after the variable declaration
 
 app.use('/api/v1/auth/', authRouter); // <- NEW LINE
-app.use("/", router)
+app.use("/api/v1/", router)
 
 // Static folder
 app.use(express.static('./public'));
