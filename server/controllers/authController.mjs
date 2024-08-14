@@ -15,12 +15,6 @@ const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
 const PORT = process.env.PORT
 const REDIRECT_URL = `http://localhost:${PORT}`
 
-const signToken = (id) => {
-    return jwt.sign({ id }, process.env.JWT_SECRET, {
-        expiresIn: process.env.JWT_TIMEOUT,
-    });
-};
-
 /* GET Google Authentication API. */
 const googleAuth = catchAsync(async (req, res, next) => {
     const code = req.query.code;
