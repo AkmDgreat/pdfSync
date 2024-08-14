@@ -1,5 +1,3 @@
-// /*App.js*/
-
 import React, { useState, useEffect } from 'react';
 import { googleLogout, useGoogleLogin } from '@react-oauth/google';
 import axios from 'axios';
@@ -70,18 +68,3 @@ function App() {
     );
 }
 export default App;
-
-
-// ChatGPT:
-// import React from 'react';
-// import GoogleLoginButton from './GoogleLoginChatGpt'
-
-// const App = () => (
-//   <div>
-//     <h1>Login with Google</h1>
-//     <GoogleLoginButton />
-//   </div>
-// );
-
-// export default App;
-
