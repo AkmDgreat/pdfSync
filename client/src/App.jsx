@@ -8,14 +8,18 @@ function App() {
 
     const login = useGoogleLogin({
         onSuccess: (googleUser) => {
+            console.log("insidde onsuccess")
             setUser(googleUser)
-            var id_token = googleUser.getAuthResponse().id_token;
+            console.log("user is set")
+            const id_token = googleUser.getAuthResponse().id_token;
+            console.log("id_token is set")
                 axios
                     .post('http://localhost:8000/api/v1/auth/google', {
                         id_token
                     })
                     .then(() => "success")
-                    .catch((e) => e)
+                    .catch((e) => console.log(`error: ${e}`))
+            console.log("post request to backend made")
         },
         onError: (error) => console.log('Login Failed:', error)
     });
@@ -32,7 +36,7 @@ function App() {
                     .then((res) => {
                         setProfile(res.data);
                     })
-                    .catch((err) => console.log(err));
+                    .catch((err) => console.log(`error: ${err}`));
             }
         },
         [ user ]

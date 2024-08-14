@@ -7,17 +7,18 @@
 
 // export default Router;
 
-
 // CHATGPT:
-import express from 'express'
-import { OAuth2Client } from 'google-auth-library';
-import User from '../models/User.mjs'
+import express from "express";
+import { OAuth2Client } from "google-auth-library";
+import User from "../models/User.mjs";
 
 const router = express.Router();
-const CLIENT_ID = "650511107339-a4avh4qp1i87h4a3ed4su7m43ddk10m1.apps.googleusercontent.com";
+const CLIENT_ID =
+  "650511107339-a4avh4qp1i87h4a3ed4su7m43ddk10m1.apps.googleusercontent.com";
 const client = new OAuth2Client();
 
-router.post('/api/v1/auth/google', async (req, res) => {
+router.post("/api/v1/auth/google", async (req, res) => {
+    console.log("in the backend")
   const { token } = req.body;
 
   try {
@@ -40,10 +41,12 @@ router.post('/api/v1/auth/google', async (req, res) => {
     // Optionally generate a session or JWT token
     // const jwtToken = generateJWT(user);
 
-    res.status(200).json({ message: 'User authenticated', user /*, token: jwtToken */ });
+    res
+      .status(200)
+      .json({ message: "User authenticated", user /*, token: jwtToken */ });
   } catch (error) {
-    console.error('Error verifying Google token:', error);
-    res.status(401).json({ message: 'Invalid Google token' });
+    console.error("Error verifying Google token:", error);
+    res.status(401).json({ message: "Invalid Google token" });
   }
 });
 

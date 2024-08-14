@@ -15,7 +15,7 @@ const MONGO_URI = process.env.MONGO_URI
 const PORT = process.env.PORT || 8000
 
 const corsOptions = {
-   origin: ['http://localhost:3000', 'http://localhost:80'],
+   origin: ['http://localhost:3000', 'http://localhost:8000'],
    credentials: true,       
    optionsSuccessStatus: 200,
 };
