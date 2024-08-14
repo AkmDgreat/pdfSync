@@ -34,7 +34,7 @@ app.use(passport.session());
 app.use(bodyParser.json());
 app.use(cors(corsOptions)); // Use this after the variable declaration
 
-app.use('/api/v1/auth/', authRouter); // <- NEW LINE
+app.use('/', authRouter); // <- NEW LINE
 app.use("/api/v1/", router)
 
 // Static folder

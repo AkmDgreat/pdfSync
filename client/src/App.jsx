@@ -1,4 +1,4 @@
-/*App.js*/
+// /*App.js*/
 
 import React, { useState, useEffect } from 'react';
 import { googleLogout, useGoogleLogin } from '@react-oauth/google';
@@ -9,7 +9,16 @@ function App() {
     const [ profile, setProfile ] = useState([]);
 
     const login = useGoogleLogin({
-        onSuccess: (codeResponse) => setUser(codeResponse),
+        onSuccess: (googleUser) => {
+            setUser(googleUser)
+            var id_token = googleUser.getAuthResponse().id_token;
+                axios
+                    .post('http://localhost:8000/api/v1/auth/google', {
+                        id_token
+                    })
+                    .then(() => "success")
+                    .catch((e) => e)
+        },
         onError: (error) => console.log('Login Failed:', error)
     });
 
@@ -20,7 +29,8 @@ function App() {
                     .get(`https://www.googleapis.com/oauth2/v1/userinfo?access_token=${user.access_token}`, {
                         headers: {
                             Authorization: `Bearer ${user.access_token}`,
-                            Accept: 'application/json'
+                            Accept: 'application/json',
+                            'Access-Control-Allow-Origin': "*"
                         }
                     })
                     .then((res) => {
@@ -60,3 +70,18 @@ function App() {
     );
 }
 export default App;
+
+
+// ChatGPT:
+// import React from 'react';
+// import GoogleLoginButton from './GoogleLoginChatGpt'
+
+// const App = () => (
+//   <div>
+//     <h1>Login with Google</h1>
+//     <GoogleLoginButton />
+//   </div>
+// );
+
+// export default App;
+
