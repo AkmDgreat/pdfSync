@@ -32,7 +32,7 @@ export const Login = async (req, res, next) => {
       }
       const user = await User.findOne({ email });
       if(!user){
-        return res.json({message:'Incorrect password or email' }) 
+        return res.json({message:'Incorrect password or email or nonexistant user' }) 
       }
       const auth = await bcrypt.compare(password,user.password)
       if (!auth) {

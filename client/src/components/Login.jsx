@@ -39,12 +39,15 @@ const Login = () => {
       );
       console.log(data);
       const { success, message } = data;
+
       if (success) {
+        localStorage.setItem("logged_in_status", JSON.stringify(true));
         handleSuccess(message);
         setTimeout(() => {
           navigate("/");
         }, 1000);
-      } else {
+      } 
+      else {
         handleError(message);
       }
     } catch (error) {
