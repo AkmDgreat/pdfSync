@@ -1,12 +1,10 @@
 import express from 'express';
-import session from 'express-session';
-import passport from 'passport';
-import fs from 'fs';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
 import router from './routes/appRoutes.mjs';
 import authRouter from './routes/authRoutes.mjs'
+import cookieParser from 'cookie-parser';
 
 import dotenv from 'dotenv';
 dotenv.config();
@@ -22,38 +20,15 @@ const corsOptions = {
 
 const app = express();
 
-app.use(session({
-    secret: 'your_session_secret',
-    resave: false,
-    saveUninitialized: false,
-}));
-
-app.use(passport.initialize());
-app.use(passport.session());
-
+app.use(cookieParser());
 app.use(bodyParser.json());
-app.use(cors(corsOptions)); // Use this after the variable declaration
+app.use(cors(corsOptions)); 
 
 app.use('/', authRouter); // <- NEW LINE
 app.use("/api/v1/", router)
 
 // Static folder
 app.use(express.static('./public'));
-
-// Serve uploads folder
-app.use('/uploads', express.static('uploads'));
-
-// Routes
-import authRoutes from './routes/authRoutes.mjs';
-import appRoutes from './routes/appRoutes.mjs';
-
-app.use('/auth', authRoutes);
-app.use('/home', appRoutes);
-
-// Create uploads directory if it doesn't exist
-if (!fs.existsSync('./uploads')) {
-    fs.mkdirSync('./uploads');
-}
 
 const connectDB = async () => {
     try {

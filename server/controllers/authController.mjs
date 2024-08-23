@@ -1,43 +1,51 @@
-import axios from 'axios';
-import jwt from 'jsonwebtoken';
-// import { promisify } from 'util';
-import catchAsync from '../utils/catchAsync.mjs';
-import AppError from './../utils/appError.mjs';
-import { auth } from 'googleapis/build/src/apis/abusiveexperiencereport/index.js';
-// import User from '../models/userModel';
-import { OAuth2Client } from 'google-auth-library';
+import User from "../models/User.mjs";
+import { createSecretToken } from "../utils/secretToken.mjs";
+import bcrypt from "bcryptjs";
 
-import dotenv from 'dotenv';
-dotenv.config();
-
-const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID
-const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
-const PORT = process.env.PORT
-const REDIRECT_URL = `http://localhost:${PORT}`
-
-/* GET Google Authentication API. */
-const googleAuth = catchAsync(async (req, res, next) => {
-    const code = req.query.code;
-    console.log("USER CREDENTIAL -> ", code);
-
-    const oauth2Client = new OAuth2Client(GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, REDIRECT_URL);
-    const googleRes = await oauth2Client.getToken(code);
-    oauth2Client.setCredentials(googleRes.tokens);
-
-    const userRes = await axios.get(
-        `https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${googleRes.tokens.access_token}`
-	);
-	
-    let user = await User.findOne({ email: userRes.data.email });
-   
-    if (!user) {
-        console.log('New User found');
-        user = await User.create({
-            name: userRes.data.name,
-            email: userRes.data.email,
-            image: userRes.data.picture,
-        });
+export const Signup = async (req, res, next) => {
+  try {
+    const { email, password, username, createdAt } = req.body;
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.json({ message: "User already exists" });
     }
-});
+    const user = await User.create({ email, password, username, createdAt });
+    const token = createSecretToken(user._id);
+    res.cookie("token", token, {
+      withCredentials: true,
+      httpOnly: false,
+    });
+    res
+      .status(201)
+      .json({ message: "User signed in successfully", success: true, user });
+    next();
+  } catch (error) {
+    console.error(error);
+  }
+};
 
-export default {googleAuth}
+export const Login = async (req, res, next) => {
+    try {
+      const { email, password } = req.body;
+      if(!email || !password ){
+        return res.json({message:'All fields are required'})
+      }
+      const user = await User.findOne({ email });
+      if(!user){
+        return res.json({message:'Incorrect password or email' }) 
+      }
+      const auth = await bcrypt.compare(password,user.password)
+      if (!auth) {
+        return res.json({message:'Incorrect password or email' }) 
+      }
+       const token = createSecretToken(user._id);
+       res.cookie("token", token, {
+         withCredentials: true,
+         httpOnly: false,
+       });
+       res.status(201).json({ message: "User logged in successfully", success: true });
+       next()
+    } catch (error) {
+      console.error(error);
+    }
+  }
